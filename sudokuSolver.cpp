@@ -9,6 +9,7 @@ using std::unordered_map;
 #include <stack>
 using std::stack;
 
+
 class board {
     public:
         board(size_t ROWS = 9, size_t COLS = 9){
@@ -24,17 +25,11 @@ class board {
         void initializeBoard(){
             this->setBoardStartingValues();   
         }
-        void printBoard(){
-           for (int r = 0; r < this->ROWS; r++){
-               for (int c = 0; c < this->COLS; c++){
-                   printf("%d ",values[r][c]);
-               }
-               printf("\n");
-           }
-           printf("\n");
-        }
         void solve(){
             this->solveBoard();
+        }
+        void showBoard(){
+            this->printBoard();
         }
 
     private:
@@ -43,7 +38,8 @@ class board {
         int COLS;
         
         void setBoardStartingValues(){
-            this->values = {{5,3,9,0,0,0,4,1,0},
+            //if you want to set a custom board uncomment below and adjust
+            /*this->values = {{5,3,9,0,0,0,4,1,0},
                             {7,0,8,3,0,4,0,0,0},
                             {6,4,1,0,0,0,7,3,0},
                             {4,0,2,0,0,0,0,7,0},
@@ -51,7 +47,27 @@ class board {
                             {1,0,7,4,6,8,2,5,3},
                             {0,0,0,0,0,0,0,0,0},
                             {9,0,0,0,4,0,5,8,0},
-                            {8,0,4,0,5,0,0,0,6}};
+                            {8,0,4,0,5,0,0,0,6}};*/
+            //remember to comment out everything below this comment in the function to use
+            //the above board initializer!!
+            int randRow;
+            int randCol;
+            int randValue;
+            int numberOfStartingValues = 9;
+
+            srand(time(NULL));
+
+            while (numberOfStartingValues > 0){
+                randValue = rand() % this->ROWS + 1;
+                randRow = rand() % this->ROWS;
+                randCol = rand() % this->COLS;
+                while (this->values[randRow][randCol] != 0 || !checkIfValueIsValid({randRow,randCol},randValue)){
+                    randRow = rand() % this->ROWS;
+                    randCol = rand() % this->COLS;
+                }
+                this->values[randRow][randCol] = randValue;
+                numberOfStartingValues--;
+            }
         }
 
         bool checkIfValueIsValid(vector<int> RowCol, size_t potentialBoardStartingValue){
@@ -130,6 +146,10 @@ class board {
                         curCol = cellStack.top() % this->ROWS;
                         values[curRow][curCol] = 0;
                         cellStack.pop();
+                        if (cellStack.empty()){
+                            printf("\nunsolvable sudoku----...\n");
+                            break;
+                        }
                     }
                     else { 
                         values[curRow][curCol] = cellPossibleValues[cellNumber].back();
@@ -157,15 +177,24 @@ class board {
 
             cellPossibleValues.insert({cellNumber,possibleValues});
         }
+        void printBoard(){
+           for (int r = 0; r < this->ROWS; r++){
+               for (int c = 0; c < this->COLS; c++){
+                   printf("%d ",values[r][c]);
+               }
+               printf("\n");
+           }
+           printf("\n");
+        }
 };
 
 int main(){
     board b;
     printf("Unsolved sudoku\n");
     b.initializeBoard();
-    b.printBoard();
+    b.showBoard();
     b.solve();
     printf("\nSolved sudoku\n");
-    b.printBoard();
+    b.showBoard();
 }
  
