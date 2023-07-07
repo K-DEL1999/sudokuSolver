@@ -156,6 +156,7 @@ void board::printBoard(){
 void board::displayBoard(){
     int screenWidth = 900;
     int screenHeight = 900;
+    bool done = 1;
 
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Window *window = SDL_CreateWindow("Sudoku", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
@@ -174,7 +175,8 @@ void board::displayBoard(){
     
     SDL_Event event;
     bool isRunning = true;
-    
+   
+    /* 
     vector<vector<int>> values = {{5,3,9,0,0,0,4,1,0},
                                   {7,0,8,3,0,4,0,0,0},
                                   {6,4,1,0,0,0,7,3,0},
@@ -184,7 +186,7 @@ void board::displayBoard(){
                                   {0,0,0,0,0,0,0,0,0},
                                   {9,0,0,0,4,0,5,8,0},
                                   {8,0,4,0,5,0,0,0,6}};
-
+    */
     int cellWidth = (screenWidth/2) / values.size(); 
     int cellHeight = (screenHeight/2) / values.size();   
 
@@ -192,6 +194,14 @@ void board::displayBoard(){
         while(SDL_PollEvent(&event)){
             if (event.type == SDL_QUIT){
                 isRunning = false;
+            }
+            else if (event.type == SDL_KEYDOWN && done){
+                if (event.key.keysym.sym == SDLK_SPACE){
+                    printf("Hello\n");
+                    this->solveBoard();
+                    printf("boardSolved\n");
+                    done = 0;
+                }
             }
         }
 
